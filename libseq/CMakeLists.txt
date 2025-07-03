@@ -42,7 +42,7 @@ target_link_libraries(libmpiseq
 set_target_properties(libmpiseq
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
+
 )
 
 add_library(lib::mpiseq ALIAS libmpiseq)

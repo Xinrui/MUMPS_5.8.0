@@ -199,7 +199,7 @@ target_compile_definitions(libmumps_common PUBLIC
 set_target_properties(libmumps_common
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
+
 )
 
 set_source_files_properties(mumps_c.c
@@ -231,17 +231,16 @@ target_compile_definitions(lib${ARITH}mumps PUBLIC
 set_target_properties(lib${ARITH}mumps
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
-add_library(mumps_lib)
+add_library(${ARITH}mumps)
 
-target_sources(mumps_lib PRIVATE
+target_sources(${ARITH}mumps PRIVATE
   $<TARGET_OBJECTS:libmumps_common>
   $<TARGET_OBJECTS:lib${ARITH}mumps>
 )
 
-target_link_libraries(mumps_lib PUBLIC 
+target_link_libraries(${ARITH}mumps PUBLIC 
   lib::pord
   lib::mpiseq
   OpenMP::OpenMP_C
@@ -249,6 +248,13 @@ target_link_libraries(mumps_lib PUBLIC
   MKL::MKL
 )
 
-target_compile_definitions(mumps_lib PUBLIC
+target_include_directories(${ARITH}mumps PUBLIC
+  $<BUILD_INTERFACE:${MUMPS_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+target_compile_definitions(${ARITH}mumps PUBLIC
   GEMMT_AVAILABLE
 )
+
+add_library(MUMPS::MUMPS ALIAS ${ARITH}mumps)

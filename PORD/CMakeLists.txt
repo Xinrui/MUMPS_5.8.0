@@ -31,7 +31,7 @@ target_compile_definitions(libpord INTERFACE PORD)
 set_target_properties(libpord
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
-  WINDOWS_EXPORT_ALL_SYMBOLS ON
+
 )
 
 add_library(lib::pord ALIAS libpord)

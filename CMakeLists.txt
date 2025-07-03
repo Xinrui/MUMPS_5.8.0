@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(MUMPS VERSION 5.8.0
-	DESCRIPTION "MUMPS: MUltifrontal Massively Parallel Sparse direct Solver"
-	HOMEPAGE_URL "https://mumps-solver.org/"
-	LANGUAGES C Fortran)
+  DESCRIPTION "MUMPS: MUltifrontal Massively Parallel Sparse directSolver"
+  HOMEPAGE_URL "https://mumps-solver.org/"
+  LANGUAGES C Fortran)
+
+if (WIN32)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+endif()
 
 include(cmake/INTEL.SEQ.cmake)
 
@@ -17,3 +24,5 @@ add_subdirectory(PORD)
 add_subdirectory(libseq)
 
 add_subdirectory(src)
+add_subdirectory(examples)
+add_subdirectory(test)
