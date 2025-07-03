@@ -1,0 +1,3 @@
+{
+    "cmake.cmakePath": "${workspaceFolder}/.vscode/cmake-with-intel.bat"
+}
