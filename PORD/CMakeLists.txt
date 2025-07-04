@@ -1,4 +1,4 @@
-add_library(libpord)
+add_library(libpord STATIC)
 
 target_sources(libpord
   PRIVATE

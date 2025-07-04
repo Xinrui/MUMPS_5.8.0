@@ -233,7 +233,7 @@ set_target_properties(lib${ARITH}mumps
   POSITION_INDEPENDENT_CODE ON
 )
 
-add_library(${ARITH}mumps)
+add_library(${ARITH}mumps STATIC)
 
 target_sources(${ARITH}mumps PRIVATE
   $<TARGET_OBJECTS:libmumps_common>
