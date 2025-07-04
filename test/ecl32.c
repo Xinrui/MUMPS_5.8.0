@@ -42,9 +42,6 @@ int MAIN__()
 int main(int argc, char **argv)
 {
 #endif
-	int num_threads = atoi(argv[1]);
-	omp_set_num_threads(num_threads);
-
 	DMUMPS_STRUC_C id;
 	MUMPS_INT n = 51993;
 	MUMPS_INT nnz = 380415;
@@ -165,6 +162,8 @@ int main(int argc, char **argv)
 
 	double elapsed = (double)(t2 - t1) / CLOCKS_PER_SEC;
 
+	// powershell中，按照以下方法设置环境变量：
+	// $env:OMP_NUM_THREADS = "12"
 	printf("线程数：%d\n", omp_get_max_threads());
 	printf("执行时间: %f 秒\n", elapsed);
 
