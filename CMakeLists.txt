@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(MUMPS VERSION 5.8.0
   DESCRIPTION "MUMPS: MUltifrontal Massively Parallel Sparse directSolver"
   HOMEPAGE_URL "https://mumps-solver.org/"
-  LANGUAGES C Fortran)
+  LANGUAGES C CXX Fortran)
 
 if (WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -25,4 +25,7 @@ add_subdirectory(libseq)
 
 add_subdirectory(src)
 add_subdirectory(examples)
+
+find_package(HDF5 REQUIRED)
+add_subdirectory(external/highfive)
 add_subdirectory(test)

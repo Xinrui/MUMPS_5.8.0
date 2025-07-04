@@ -1,2 +1,3 @@
 /build
+/data
 include/mumps_int_def.h
