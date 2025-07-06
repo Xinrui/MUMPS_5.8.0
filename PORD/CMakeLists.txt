@@ -26,7 +26,7 @@ target_include_directories(libpord
 
 target_link_libraries(libpord PRIVATE OpenMP::OpenMP_C)
 
-target_compile_definitions(libpord INTERFACE PORD)
+target_compile_definitions(libpord INTERFACE pord)
 
 set_target_properties(libpord
   PROPERTIES
