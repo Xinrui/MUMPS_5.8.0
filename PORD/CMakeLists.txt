@@ -1,6 +1,6 @@
-add_library(libpord STATIC)
+add_library(pord STATIC)
 
-target_sources(libpord
+target_sources(pord
   PRIVATE
   lib/graph.c 
   lib/gbipart.c 
@@ -18,20 +18,22 @@ target_sources(libpord
   lib/minpriority.c
 )
 
-target_include_directories(libpord
+target_include_directories(pord
   PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(libpord PRIVATE OpenMP::OpenMP_C)
-
-target_compile_definitions(libpord INTERFACE PORD)
-
-set_target_properties(libpord
-  PROPERTIES
-  POSITION_INDEPENDENT_CODE ON
-
+target_compile_options(pord
+  PRIVATE
+  ${OpenMP_C_FLAGS}
 )
 
-add_library(lib::pord ALIAS libpord)
+target_compile_definitions(pord INTERFACE PORD)
+
+set_target_properties(pord
+  PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+)
+
+add_library(lib::pord ALIAS pord)
