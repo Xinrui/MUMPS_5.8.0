@@ -29,7 +29,7 @@ target_compile_options(pord
   ${OpenMP_C_FLAGS}
 )
 
-target_compile_definitions(pord INTERFACE PORD)
+target_compile_definitions(pord INTERFACE pord)
 
 set_target_properties(pord
   PROPERTIES
