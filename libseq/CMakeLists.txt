@@ -5,9 +5,11 @@ add_library(mpiseq_C OBJECT
 )
 
 target_compile_options(mpiseq_C
-  PRIVATE 
+  PRIVATE
   ${OpenMP_C_FLAGS}
 )
+
+target_compile_definitions(mpiseq_C PRIVATE Add_)
 
 set_target_properties(mpiseq_C
   PROPERTIES
@@ -20,12 +22,12 @@ add_library(mpiseq_Fortran OBJECT
 )
 
 target_compile_definitions(mpiseq_Fortran
-  PRIVATE 
+  PRIVATE
   GEMMT_AVAILABLE
 )
 
 target_compile_options(mpiseq_Fortran
-  PRIVATE 
+  PRIVATE
   ${OpenMP_Fortran_FLAGS}
 )
 

@@ -174,6 +174,18 @@ set(OBJS_OTHER
   ${ARITH}type3_root.F
 )
 
+foreach(OBJS IN LISTS OBJS_COMMON_MOD OBJS_COMMON_OTHER OBJS_C_COMMON OBJS_MOD_ARITHDEP OBJS_OTHER)
+  foreach(OBJ IN LISTS OBJS)
+    if(OBJ MATCHES "\\.F$")
+      set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_Fortran_FLAGS}")
+    endif()
+    if(OBJ MATCHES "\\.c$")
+      set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_C_FLAGS}")
+      set_source_files_properties(${OBJ} PROPERTIES COMPILE_DEFINITIONS Add_)
+    endif()
+  endforeach()
+endforeach()
+
 add_library(libmumps_common OBJECT
   ${OBJS_COMMON_MOD}
   ${OBJS_COMMON_OTHER}
@@ -188,8 +200,6 @@ target_include_directories(libmumps_common PUBLIC
 target_link_libraries(libmumps_common PUBLIC
   lib::pord
   lib::mpiseq
-  OpenMP::OpenMP_C
-  OpenMP::OpenMP_Fortran
 )
 
 target_compile_definitions(libmumps_common PUBLIC
@@ -199,12 +209,10 @@ target_compile_definitions(libmumps_common PUBLIC
 set_target_properties(libmumps_common
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
-
 )
 
-set_source_files_properties(mumps_c.c
-  PROPERTIES
-  COMPILE_FLAGS "-DMUMPS_ARITH=MUMPS_ARITH_${ARITH}"
+set_property(SOURCE mumps_c.c APPEND PROPERTY
+  COMPILE_DEFINITIONS "MUMPS_ARITH=MUMPS_ARITH_${ARITH}"
 )
 
 add_library(lib${ARITH}mumps OBJECT
@@ -220,8 +228,6 @@ target_include_directories(lib${ARITH}mumps PUBLIC
 target_link_libraries(lib${ARITH}mumps PUBLIC
   lib::pord
   lib::mpiseq
-  OpenMP::OpenMP_C
-  OpenMP::OpenMP_Fortran
 )
 
 target_compile_definitions(lib${ARITH}mumps PUBLIC
@@ -233,7 +239,7 @@ set_target_properties(lib${ARITH}mumps
   POSITION_INDEPENDENT_CODE ON
 )
 
-add_library(${ARITH}mumps STATIC)
+add_library(${ARITH}mumps)
 
 target_sources(${ARITH}mumps PRIVATE
   $<TARGET_OBJECTS:libmumps_common>
@@ -243,8 +249,6 @@ target_sources(${ARITH}mumps PRIVATE
 target_link_libraries(${ARITH}mumps PUBLIC 
   lib::pord
   lib::mpiseq
-  OpenMP::OpenMP_C
-  OpenMP::OpenMP_Fortran
   MKL::MKL
 )
 

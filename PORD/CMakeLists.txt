@@ -1,4 +1,4 @@
-add_library(pord STATIC)
+add_library(pord)
 
 target_sources(pord
   PRIVATE
