@@ -200,6 +200,8 @@ target_include_directories(libmumps_common PUBLIC
 target_link_libraries(libmumps_common PUBLIC
   lib::pord
   lib::mpiseq
+  OpenMP::OpenMP_C
+  OpenMP::OpenMP_Fortran
 )
 
 target_compile_definitions(libmumps_common PUBLIC
@@ -228,6 +230,8 @@ target_include_directories(lib${ARITH}mumps PUBLIC
 target_link_libraries(lib${ARITH}mumps PUBLIC
   lib::pord
   lib::mpiseq
+  OpenMP::OpenMP_C
+  OpenMP::OpenMP_Fortran
 )
 
 target_compile_definitions(lib${ARITH}mumps PUBLIC
@@ -246,10 +250,12 @@ target_sources(${ARITH}mumps PRIVATE
   $<TARGET_OBJECTS:lib${ARITH}mumps>
 )
 
-target_link_libraries(${ARITH}mumps PUBLIC 
+target_link_libraries(${ARITH}mumps PRIVATE 
   lib::pord
   lib::mpiseq
   MKL::MKL
+  OpenMP::OpenMP_C
+  OpenMP::OpenMP_Fortran
 )
 
 target_include_directories(${ARITH}mumps PUBLIC
@@ -257,7 +263,7 @@ target_include_directories(${ARITH}mumps PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(${ARITH}mumps PUBLIC
+target_compile_definitions(${ARITH}mumps PRIVATE
   GEMMT_AVAILABLE
 )
 

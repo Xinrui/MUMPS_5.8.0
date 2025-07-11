@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "ecl32",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build/bin/ecl32_test.exe",
+			"cwd": "${workspaceFolder}/build",
+			"args": [
+				"${workspaceFolder}/mtx/ecl32.mtx"
+			]
+		}
+	]
+}

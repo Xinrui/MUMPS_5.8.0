@@ -24,6 +24,4 @@ add_subdirectory(libseq)
 add_subdirectory(src)
 add_subdirectory(examples)
 
-# find_package(HDF5 REQUIRED)
-# add_subdirectory(external/highfive)
-# add_subdirectory(test)
+add_subdirectory(test)
