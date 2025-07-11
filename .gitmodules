@@ -1,3 +1,0 @@
-[submodule "external/highfive"]
-	path = external/highfive
-	url = https://github.com/highfive-devs/highfive.git
