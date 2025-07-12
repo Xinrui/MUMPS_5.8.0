@@ -8,7 +8,7 @@
 			"binaryDir": "${sourceDir}/build",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "icx",
-				"CMAKE_CXX_COMPILER": "icx",
+				"CMAKE_CXX_COMPILER": "icpx",
 				"CMAKE_Fortran_COMPILER": "ifx",
 				"CMAKE_BUILD_TYPE": "Release",
 				"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"

@@ -1,6 +1,6 @@
-add_executable(ecl32_test ecl32.cpp)
+add_executable(ecl32 ecl32.cpp)
 
-target_link_libraries(ecl32_test PRIVATE 
+target_link_libraries(ecl32 PRIVATE 
   MUMPS::MUMPS
   OpenMP::OpenMP_CXX
 )
