@@ -24,9 +24,9 @@ target_include_directories(pord
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_options(pord
+target_link_libraries(pord
   PRIVATE
-  ${OpenMP_C_FLAGS}
+  OpenMP::OpenMP_C
 )
 
 target_compile_definitions(pord INTERFACE pord)
