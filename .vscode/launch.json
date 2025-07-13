@@ -2,14 +2,24 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "ecl32",
+			"name": "ecl32-win",
 			"type": "cppvsdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/build/bin/ecl32_test.exe",
-			"cwd": "${workspaceFolder}/build",
+			"program": "${workspaceFolder}/build-debug/bin/ecl32",
+			"cwd": "${workspaceFolder}/build-debug",
 			"args": [
 				"${workspaceFolder}/mtx/ecl32.mtx"
 			]
-		}
+		},
+		{
+			"name": "ecl32-lin",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/build-debug/bin/ecl32",
+			"cwd": "${workspaceFolder}/build-debug",
+			"args": [
+				"${workspaceFolder}/mtx/ecl32.mtx"
+			]
+		},
 	]
 }

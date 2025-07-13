@@ -2,16 +2,30 @@
 	"version": 4,
 	"configurePresets": [
 		{
-			"name": "default",
-			"hidden": false,
+			"name": "intel-ninja",
+			"hidden": true,
 			"generator": "Ninja",
-			"binaryDir": "${sourceDir}/build",
 			"cacheVariables": {
 				"CMAKE_C_COMPILER": "icx",
 				"CMAKE_CXX_COMPILER": "icpx",
 				"CMAKE_Fortran_COMPILER": "ifx",
-				"CMAKE_BUILD_TYPE": "Release",
 				"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+			}
+		},
+		{
+			"name": "ninja-debug",
+			"hidden": false,
+			"binaryDir": "${sourceDir}/build-debug",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Debug"
+			}
+		},
+		{
+			"name": "ninja-release",
+			"hidden": false,
+			"binaryDir": "${sourceDir}/build-release",
+			"cacheVariables": {
+				"CMAKE_BUILD_TYPE": "Release"
 			}
 		}
 	]
