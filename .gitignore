@@ -3,3 +3,4 @@
 include/mumps_int_def.h
 .vs
 out
+.vscode/settings.json

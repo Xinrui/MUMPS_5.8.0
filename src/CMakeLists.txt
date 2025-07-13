@@ -178,6 +178,7 @@ foreach(OBJS IN LISTS OBJS_COMMON_MOD OBJS_COMMON_OTHER OBJS_C_COMMON OBJS_MOD_A
   foreach(OBJ IN LISTS OBJS)
     if(OBJ MATCHES "\\.F$")
       set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_Fortran_FLAGS}")
+      set_source_files_properties(${OBJ} PROPERTIES COMPILE_DEFINITIONS GEMMT_AVAILABLE)
     endif()
     if(OBJ MATCHES "\\.c$")
       set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_C_FLAGS}")
@@ -186,29 +187,25 @@ foreach(OBJS IN LISTS OBJS_COMMON_MOD OBJS_COMMON_OTHER OBJS_C_COMMON OBJS_MOD_A
   endforeach()
 endforeach()
 
-add_library(libmumps_common OBJECT
+add_library(mumps_common
   ${OBJS_COMMON_MOD}
   ${OBJS_COMMON_OTHER}
   ${OBJS_C_COMMON}
 )
 
-target_include_directories(libmumps_common PUBLIC
+target_include_directories(mumps_common PUBLIC
   $<BUILD_INTERFACE:${MUMPS_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(libmumps_common PUBLIC
+target_link_libraries(mumps_common PUBLIC
   lib::pord
   lib::mpiseq
   OpenMP::OpenMP_C
   OpenMP::OpenMP_Fortran
 )
 
-target_compile_definitions(libmumps_common PUBLIC
-  GEMMT_AVAILABLE
-)
-
-set_target_properties(libmumps_common
+set_target_properties(mumps_common
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
 )
@@ -217,45 +214,9 @@ set_property(SOURCE mumps_c.c APPEND PROPERTY
   COMPILE_DEFINITIONS "MUMPS_ARITH=MUMPS_ARITH_${ARITH}"
 )
 
-add_library(lib${ARITH}mumps OBJECT
+add_library(${ARITH}mumps
   ${OBJS_MOD_ARITHDEP}
   ${OBJS_OTHER}
-)
-
-target_include_directories(lib${ARITH}mumps PUBLIC
-  $<BUILD_INTERFACE:${MUMPS_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>
-)
-
-target_link_libraries(lib${ARITH}mumps PUBLIC
-  lib::pord
-  lib::mpiseq
-  OpenMP::OpenMP_C
-  OpenMP::OpenMP_Fortran
-)
-
-target_compile_definitions(lib${ARITH}mumps PUBLIC
-  GEMMT_AVAILABLE
-)
-
-set_target_properties(lib${ARITH}mumps
-  PROPERTIES
-  POSITION_INDEPENDENT_CODE ON
-)
-
-add_library(${ARITH}mumps)
-
-target_sources(${ARITH}mumps PRIVATE
-  $<TARGET_OBJECTS:libmumps_common>
-  $<TARGET_OBJECTS:lib${ARITH}mumps>
-)
-
-target_link_libraries(${ARITH}mumps PRIVATE 
-  lib::pord
-  lib::mpiseq
-  MKL::MKL
-  OpenMP::OpenMP_C
-  OpenMP::OpenMP_Fortran
 )
 
 target_include_directories(${ARITH}mumps PUBLIC
@@ -263,8 +224,29 @@ target_include_directories(${ARITH}mumps PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(${ARITH}mumps PRIVATE
+target_link_libraries(${ARITH}mumps PUBLIC
+  lib::pord
+  lib::mpiseq
+  mumps_common
+  OpenMP::OpenMP_C
+  OpenMP::OpenMP_Fortran
+  MKL::MKL
+)
+
+target_compile_definitions(${ARITH}mumps PUBLIC
   GEMMT_AVAILABLE
 )
 
-add_library(MUMPS::MUMPS ALIAS ${ARITH}mumps)
+set_target_properties(${ARITH}mumps
+  PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+)
+
+add_library(MUMPS INTERFACE)
+
+target_link_libraries(MUMPS INTERFACE 
+  mumps_common
+  ${ARITH}mumps
+)
+
+add_library(MUMPS::MUMPS ALIAS MUMPS)
