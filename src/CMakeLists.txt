@@ -174,19 +174,6 @@ set(OBJS_OTHER
   ${ARITH}type3_root.F
 )
 
-foreach(OBJS IN LISTS OBJS_COMMON_MOD OBJS_COMMON_OTHER OBJS_C_COMMON OBJS_MOD_ARITHDEP OBJS_OTHER)
-  foreach(OBJ IN LISTS OBJS)
-    if(OBJ MATCHES "\\.F$")
-      set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_Fortran_FLAGS}")
-      set_source_files_properties(${OBJ} PROPERTIES COMPILE_DEFINITIONS GEMMT_AVAILABLE)
-    endif()
-    if(OBJ MATCHES "\\.c$")
-      set_source_files_properties(${OBJ} PROPERTIES COMPILE_FLAGS "${OpenMP_C_FLAGS}")
-      set_source_files_properties(${OBJ} PROPERTIES COMPILE_DEFINITIONS Add_)
-    endif()
-  endforeach()
-endforeach()
-
 add_library(mumps_common
   ${OBJS_COMMON_MOD}
   ${OBJS_COMMON_OTHER}
@@ -198,11 +185,17 @@ target_include_directories(mumps_common PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
+target_compile_definitions(mumps_common PUBLIC
+  $<$<COMPILE_LANGUAGE:C>:Add_>
+  $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>
+)
+
 target_link_libraries(mumps_common PUBLIC
   lib::pord
   lib::mpiseq
   OpenMP::OpenMP_C
   OpenMP::OpenMP_Fortran
+  Threads::Threads
 )
 
 set_target_properties(mumps_common
@@ -210,9 +203,7 @@ set_target_properties(mumps_common
   POSITION_INDEPENDENT_CODE ON
 )
 
-set_property(SOURCE mumps_c.c APPEND PROPERTY
-  COMPILE_DEFINITIONS "MUMPS_ARITH=MUMPS_ARITH_${ARITH}"
-)
+add_library(lib::mumps_common ALIAS mumps_common)
 
 add_library(${ARITH}mumps
   ${OBJS_MOD_ARITHDEP}
@@ -227,19 +218,25 @@ target_include_directories(${ARITH}mumps PUBLIC
 target_link_libraries(${ARITH}mumps PUBLIC
   lib::pord
   lib::mpiseq
-  mumps_common
   OpenMP::OpenMP_C
   OpenMP::OpenMP_Fortran
   MKL::MKL
+  Threads::Threads PRIVATE
+  lib::mumps_common
 )
 
 target_compile_definitions(${ARITH}mumps PUBLIC
-  GEMMT_AVAILABLE
+  $<$<COMPILE_LANGUAGE:C>:Add_>
+  $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>
 )
 
 set_target_properties(${ARITH}mumps
   PROPERTIES
   POSITION_INDEPENDENT_CODE ON
+)
+
+set_property(SOURCE mumps_c.c APPEND PROPERTY
+  COMPILE_DEFINITIONS "MUMPS_ARITH=MUMPS_ARITH_${ARITH}"
 )
 
 add_library(MUMPS INTERFACE)

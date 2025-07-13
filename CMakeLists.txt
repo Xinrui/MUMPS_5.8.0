@@ -17,6 +17,7 @@ set(MKL_INTERFACE lp64)
 find_package(MKL REQUIRED)
 
 find_package(OpenMP REQUIRED)
+find_package(Threads REQUIRED)
 
 add_subdirectory(PORD)
 add_subdirectory(libseq)
