@@ -1,6 +1,6 @@
 #include <mumps.hpp>
 
-#include <ctime>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -69,16 +69,17 @@ int main(int argc, char *argv[])
 
 	mumps_par.job() = 6;
 
-	std::clock_t t1 = clock();
+	using namespace std::chrono;
+	auto t1 = system_clock::now();
 	mumps_c(mumps_par);
-	std::clock_t t2 = clock();
+	auto t2 = system_clock::now();
 
-	double elapsed = (double)(t2 - t1) / CLOCKS_PER_SEC;
+	auto elapsed = (t2 - t1);
 
 	// powershell中，按照以下方法设置环境变量：
 	// $env:OMP_NUM_THREADS = "12"
 	std::printf("线程数：%d\n", omp_get_max_threads());
-	std::printf("执行时间: %f 秒\n", elapsed);
+	std::printf("执行时间: %f 秒\n", elapsed.count() / 1.e9);
 	std::printf("Solution is : (%8.2f  %8.2f)\n", rhs[0], rhs[1]);
 
 	mumps_par.job() = JOB_END;
