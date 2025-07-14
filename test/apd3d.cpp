@@ -1,84 +1,105 @@
-#include <highfive/highfive.hpp>
 #include <mumps.hpp>
 
-#include <ctime>
-#include <omp.h>
+#include <chrono>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
-using namespace HighFive;
+#include <vector>
+#include <string>
 
-int main()
+int main(int argc, char *argv[])
 {
-	// 1. 读取数据
-
-	File file{"E:/workspace/MUMPS_5.8.0/data/linear_system_dump.h5", File::ReadOnly};
-
-	auto dataset = file.getDataSet("New_SingleScan1/0.001_04/jacobian_column_indices");
-	auto column_indices = dataset.read<std::vector<int>>();
-
-	dataset = file.getDataSet("New_SingleScan1/0.001_04/jacobian_row_pointers");
-	auto row_pointers = dataset.read<std::vector<int>>();
-
-	dataset = file.getDataSet("New_SingleScan1/0.001_04/jacobian_data");
-	auto data = dataset.read<std::vector<double>>();
-
-	int nnz = data.size();
-	int nrows = row_pointers.size() - 1;
-
-	std::vector<int> row_coo(nnz);
-	std::vector<int> col_coo(nnz);
-	std::vector<double> val_coo(nnz);
-
-	for (int i = 0; i < nrows; ++i)
+	if (argc != 3)
 	{
-		for (int j = row_pointers[i]; j < row_pointers[i + 1]; ++j)
-		{
-			row_coo[j] = i;					// 行号
-			col_coo[j] = column_indices[j]; // 列号
-			val_coo[j] = data[j];			// 值
-		}
+		std::cerr << "Usage: " << argv[0] << " <matrix_file> <rhs_file>" << std::endl;
+		return 1;
 	}
 
-	std::vector<double> rhs(59900);
-	dataset = file.getDataSet("New_SingleScan1/0.001_04/rhs");
-	dataset.read_raw(rhs.data());
+	int n = 59901;
+	int nnz = 1300196;
 
-	assert(nrows == rhs.size());
+	// argv[1] : apd3d.mtx
+	std::ifstream fin{argv[1]};
+	if (!fin)
+	{
+		std::cerr << "Error opening file: " << argv[1] << std::endl;
+		return 1;
+	}
 
-	// 2. 求解方程
+	std::vector<int> irn, jcn;
+	std::vector<double> value;
+
+	irn.reserve(nnz);
+	jcn.reserve(nnz);
+	value.reserve(nnz);
+
+	for (std::string line; std::getline(fin, line);)
+	{
+		std::stringstream ss{line};
+		int i, j;
+		double a;
+		ss >> i >> j >> a;
+		irn.push_back(i);
+		jcn.push_back(j);
+		value.push_back(a);
+	}
+	fin.close();
+
+	// argv[2] : apd3d.rhs
+	fin.open(argv[2]);
+	if (!fin)
+	{
+		std::cerr << "Error opening file: " << argv[2] << std::endl;
+		return 1;
+	}
+
+	std::vector<double> rhs;
+	rhs.reserve(n);
+
+	for (std::string line; std::getline(fin, line);)
+	{
+		std::stringstream ss{line};
+		double b;
+		ss >> b;
+		rhs.push_back(b);
+	}
+	fin.close();
+
 	MUMPS_STRUC_C<double> mumps_par;
-	mumps_par.comm() = 	USE_COMM_WORLD;
-	mumps_par.par() = 1; 
-	mumps_par.sym() = 0; 
+	mumps_par.comm() = USE_COMM_WORLD;
+	mumps_par.par() = 1;
+	mumps_par.sym() = 0;
 	mumps_par.job() = JOB_INIT;
 	mumps_c(mumps_par);
 
-	mumps_par.n() = nrows;
+	mumps_par.n() = n;
 	mumps_par.nnz() = nnz;
-	mumps_par.irn() = row_coo.data();
-	mumps_par.jcn() = col_coo.data();
-	mumps_par.a() = val_coo.data();
+	mumps_par.irn() = irn.data();
+	mumps_par.jcn() = jcn.data();
+	mumps_par.a() = value.data();
 	mumps_par.rhs() = rhs.data();
 
-	mumps_par.ICNTL(1) = 1; 
-	mumps_par.ICNTL(2) = -1; 
-	mumps_par.ICNTL(3) = -1; 
-	mumps_par.ICNTL(4) = -1; 
+	mumps_par.ICNTL(1) = 1;
+	mumps_par.ICNTL(2) = -1;
+	mumps_par.ICNTL(3) = -1;
+	mumps_par.ICNTL(4) = -1;
 
 	mumps_par.job() = 6;
 
-	std::clock_t t1 = clock();
+	using namespace std::chrono;
+	auto t1 = system_clock::now();
 	mumps_c(mumps_par);
-	std::clock_t t2 = clock();
+	auto t2 = system_clock::now();
 
-	double elapsed = static_cast<double>(t2 - t1) / CLOCKS_PER_SEC;
-
-	mumps_par.job() = JOB_END;
-	mumps_c(mumps_par);
+	auto elapsed = duration_cast<nanoseconds>(t2 - t1);
 
 	// powershell中，按照以下方法设置环境变量：
 	// $env:OMP_NUM_THREADS = "12"
-	printf("线程数：%d\n", omp_get_max_threads());
-	printf("执行时间: %f 秒\n", elapsed);
+	std::printf("执行时间: %f 秒\n", elapsed.count() / 1.e9);
+
+	mumps_par.job() = JOB_END;
+	mumps_c(mumps_par);
 
 	return 0;
 }
