@@ -193,6 +193,7 @@ target_compile_definitions(mumps_common PUBLIC
 target_link_libraries(mumps_common PUBLIC
   lib::pord
   lib::mpiseq
+  metis::metis
   OpenMP::OpenMP_C
   OpenMP::OpenMP_Fortran
   Threads::Threads
@@ -218,6 +219,7 @@ target_include_directories(${ARITH}mumps PUBLIC
 target_link_libraries(${ARITH}mumps PUBLIC
   lib::pord
   lib::mpiseq
+  metis::metis
   OpenMP::OpenMP_C
   OpenMP::OpenMP_Fortran
   MKL::MKL
