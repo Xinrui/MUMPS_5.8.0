@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	mumps_c(mumps_par);
 	auto t2 = system_clock::now();
 
-	auto elapsed = (t2 - t1);
+	auto elapsed = duration_cast<nanoseconds>(t2 - t1);
 
 	// powershell中，按照以下方法设置环境变量：
 	// $env:OMP_NUM_THREADS = "12"
