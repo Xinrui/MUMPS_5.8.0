@@ -80,11 +80,6 @@ int main(int argc, char *argv[])
 	mumps_par.a() = value.data();
 	mumps_par.rhs() = rhs.data();
 
-	mumps_par.ICNTL(1) = 1;
-	mumps_par.ICNTL(2) = -1;
-	mumps_par.ICNTL(3) = -1;
-	mumps_par.ICNTL(4) = -1;
-
 	mumps_par.job() = 6;
 
 	using namespace std::chrono;
