@@ -1,6 +1,3 @@
-[submodule "GKlib"]
-	path = GKlib
-	url = https://github.com/Xinrui/GKlib.git
 [submodule "METIS"]
 	path = METIS
 	url = https://github.com/Xinrui/METIS.git
