@@ -8,8 +8,6 @@
 #include <vector>
 #include <string>
 
-#include <omp.h>
-
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
@@ -78,7 +76,6 @@ int main(int argc, char *argv[])
 
 	// powershell中，按照以下方法设置环境变量：
 	// $env:OMP_NUM_THREADS = "12"
-	std::printf("线程数：%d\n", omp_get_max_threads());
 	std::printf("执行时间: %f 秒\n", elapsed.count() / 1.e9);
 	std::printf("Solution is : (%8.2f  %8.2f)\n", rhs[0], rhs[1]);
 
