@@ -2,7 +2,18 @@
 	"version": 4,
 	"configurePresets": [
 		{
-			"name": "intel-ninja",
+			"name": "intel-ninja-win",
+			"hidden": true,
+			"generator": "Ninja",
+			"cacheVariables": {
+				"CMAKE_C_COMPILER": "icx",
+				"CMAKE_CXX_COMPILER": "icx",
+				"CMAKE_Fortran_COMPILER": "ifx",
+				"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+			}
+		},
+		{
+			"name": "intel-ninja-lin",
 			"hidden": true,
 			"generator": "Ninja",
 			"cacheVariables": {
@@ -13,18 +24,18 @@
 			}
 		},
 		{
-			"name": "ninja-debug",
+			"name": "ninja-debug-win",
 			"hidden": false,
-			"inherits": "intel-ninja",
+			"inherits": "intel-ninja-win",
 			"binaryDir": "${sourceDir}/build-debug",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Debug"
 			}
 		},
 		{
-			"name": "ninja-release",
+			"name": "ninja-release-win",
 			"hidden": false,
-			"inherits": "intel-ninja",
+			"inherits": "intel-ninja-win",
 			"binaryDir": "${sourceDir}/build-release",
 			"cacheVariables": {
 				"CMAKE_BUILD_TYPE": "Release"
