@@ -9,7 +9,8 @@
 				"CMAKE_C_COMPILER": "icx",
 				"CMAKE_CXX_COMPILER": "icx",
 				"CMAKE_Fortran_COMPILER": "ifx",
-				"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+				"CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+				"OPENMP": true
 			}
 		},
 		{

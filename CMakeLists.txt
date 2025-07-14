@@ -22,6 +22,8 @@ find_package(Threads REQUIRED)
 add_subdirectory(PORD)
 add_subdirectory(libseq)
 
+add_subdirectory(GKlib)
+
 add_subdirectory(src)
 add_subdirectory(examples)
 
