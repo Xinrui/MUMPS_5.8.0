@@ -1,4 +1,4 @@
-set(OBJS_COMMON_MOD 
+set(SRCS_COMMON_MOD 
   ana_blk_m.F
   ana_omp_m.F
   ana_orderings_wrappers_m.F
@@ -27,7 +27,7 @@ set(OBJS_COMMON_MOD
 )
 
 # Object files for arithmetic-independent FORTRAN files.
-set(OBJS_COMMON_OTHER
+set(SRCS_COMMON_OTHER
   ana_blk.F
   ana_orderings.F
   ana_set_ordering.F
@@ -42,7 +42,7 @@ set(OBJS_COMMON_OTHER
 )
 
 # Object files for arithmetic-independent C files.
-set(OBJS_C_COMMON
+set(SRCS_C_COMMON
   mumps_addr.c
   mumps_common.c
   mumps_config_file_C.c
@@ -65,7 +65,7 @@ set(OBJS_C_COMMON
   mumps_save_restore_C.c
 )
 
-set(OBJS_MOD_ARITHDEP
+set(SRCS_MOD_ARITHDEP
   ${ARITH}ana_aux.F
   ${ARITH}ana_aux_par.F
   ${ARITH}ana_lr.F
@@ -104,7 +104,7 @@ set(OBJS_MOD_ARITHDEP
 )
 
 # Mixture of C and Fortran source files
-set(OBJS_OTHER
+set(SRCS_OTHER
   ${ARITH}ana_aux_ELT.F
   ${ARITH}ana_dist_m.F
   ${ARITH}ana_driver.F
@@ -175,9 +175,9 @@ set(OBJS_OTHER
 )
 
 add_library(mumps_common
-  ${OBJS_COMMON_MOD}
-  ${OBJS_COMMON_OTHER}
-  ${OBJS_C_COMMON}
+  ${SRCS_COMMON_MOD}
+  ${SRCS_COMMON_OTHER}
+  ${SRCS_C_COMMON}
 )
 
 target_include_directories(mumps_common PUBLIC
@@ -207,8 +207,8 @@ set_target_properties(mumps_common
 add_library(lib::mumps_common ALIAS mumps_common)
 
 add_library(${ARITH}mumps
-  ${OBJS_MOD_ARITHDEP}
-  ${OBJS_OTHER}
+  ${SRCS_MOD_ARITHDEP}
+  ${SRCS_OTHER}
 )
 
 target_include_directories(${ARITH}mumps PUBLIC
