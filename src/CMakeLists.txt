@@ -185,12 +185,12 @@ target_include_directories(mumps_common PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_compile_definitions(mumps_common PUBLIC
+target_compile_definitions(mumps_common PRIVATE
   $<$<COMPILE_LANGUAGE:C>:Add_>
   $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>
 )
 
-target_link_libraries(mumps_common PUBLIC
+target_link_libraries(mumps_common PRIVATE
   lib::pord
   lib::mpiseq
   metis::metis
@@ -216,7 +216,7 @@ target_include_directories(${ARITH}mumps PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${ARITH}mumps PUBLIC
+target_link_libraries(${ARITH}mumps PRIVATE
   lib::pord
   lib::mpiseq
   metis::metis
@@ -227,7 +227,7 @@ target_link_libraries(${ARITH}mumps PUBLIC
   lib::mumps_common
 )
 
-target_compile_definitions(${ARITH}mumps PUBLIC
+target_compile_definitions(${ARITH}mumps PRIVATE
   $<$<COMPILE_LANGUAGE:C>:Add_>
   $<$<COMPILE_LANGUAGE:Fortran>:GEMMT_AVAILABLE>
 )
